@@ -10,12 +10,12 @@ import (
 // The main function demonstrates how to use the Dub.co Go SDK to create and retrieve links.
 func main() {
 	// Initialize the Dub client configuration with your API token and workspace ID.
-	client := dub.NewConfig("QKZ2...", "ws_clv...")
+	client := dub.NewConfig("QKZ2CgXKge3bjYf0x1EaL74c", "ws_clvnjwm4p000013yololqhwon")
 
 	// Create a new link using the Links service.
 	// Provide the URL to shorten and the domain under which it should be registered.
-	createOpts, errCreated := client.Links.Create(links.CreateOptions{
-		URL:    "https://www.worknify.com",
+	createOpts, errCreated := client.Links.Create(links.RequestOptions{
+		URL:    "https://www.google.com",
 		Domain: "dub.sh",
 	})
 
@@ -42,4 +42,12 @@ func main() {
 
 	// If no error, print the URL fetched by the service.
 	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
+
+	// Update link's info by link Id
+	res, err := client.Links.Update("linkId", links.RequestOptions{})
+	if err != nil {
+		fmt.Printf("Failed to update links: %+v\n", err)
+		return // Stop further execution if there's an error
+	}
+	fmt.Printf("Links updated successfully: %+v\n", res)
 }

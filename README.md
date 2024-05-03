@@ -71,5 +71,12 @@ func main() {
 	// If the link is retrieved successfully, output the URL.
 	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
 }
+	// Update link's info by link Id
+	res, err := client.Links.Update("linkId", links.RequestOptions{})
+	if err != nil {
+		fmt.Printf("Failed to update links: %+v\n", err)
+		return // Stop further execution if there's an error
+	}
+	fmt.Printf("Links updated successfully: %+v\n", res)
 ```
 

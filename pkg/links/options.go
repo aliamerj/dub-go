@@ -1,7 +1,7 @@
 package links
 
-type CreateOptions struct {
-	URL         string            `json:"url"`
+type RequestOptions struct {
+	URL         string            `json:"url,omitempty"`
 	Domain      string            `json:"domain,omitempty"`
 	Key         string            `json:"key,omitempty"`
 	ExternalID  string            `json:"externalId,omitempty"`
@@ -24,7 +24,7 @@ type CreateOptions struct {
 	Android     string            `json:"android,omitempty"`
 	Geo         map[string]string `json:"geo,omitempty"`
 }
-type ResponseOptions struct {
+type responseOptions struct {
 	ID          string            `json:"id"`
 	Domain      string            `json:"domain"`
 	Key         string            `json:"key"`

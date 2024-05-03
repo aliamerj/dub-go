@@ -16,7 +16,7 @@ type LinksService struct {
 	HttpClient  *http.Client
 }
 
-func (ls *LinksService) Create(createOptions CreateOptions) (*ResponseOptions, error) {
+func (ls *LinksService) Create(createOptions RequestOptions) (*responseOptions, error) {
 	if len(createOptions.URL) == 0 {
 		return nil, fmt.Errorf("URL is required")
 	}
@@ -36,10 +36,10 @@ func (ls *LinksService) Create(createOptions CreateOptions) (*ResponseOptions, e
 		return nil, err
 	}
 	defer res.Body.Close()
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		return nil, handler.APIError(res)
 	}
-	var response ResponseOptions
+	var response responseOptions
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("failed to decode successful response: %v", err)
 	}
@@ -47,7 +47,7 @@ func (ls *LinksService) Create(createOptions CreateOptions) (*ResponseOptions, e
 	return &response, nil
 }
 
-func (ls *LinksService) Get(getOptions GetOptions) (*ResponseOptions, error) {
+func (ls *LinksService) Get(getOptions GetOptions) (*responseOptions, error) {
 	baseURL := "https://api.dub.co/links/info"
 	url, err := url.Parse(baseURL)
 	if err != nil {
@@ -84,15 +84,45 @@ func (ls *LinksService) Get(getOptions GetOptions) (*ResponseOptions, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		// Handle non-OK responses here
 		return nil, handler.APIError(resp)
 	}
 
-	var response ResponseOptions
+	var response responseOptions
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("failed to decode successful response: %v", err)
 	}
 
 	return &response, nil
 
+}
+
+func (ls *LinksService) Update(linkId string, requsetOptions RequestOptions) (*responseOptions, error) {
+	if len(linkId) == 0 {
+		return nil, fmt.Errorf("LinkId should not be  empty")
+	}
+	apiUrl := "https://api.dub.co/links/" + linkId + "?workspaceId=" + ls.WorkspaceId
+	jsonData, err := json.Marshal(requsetOptions)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest("PATCH", apiUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+ls.Token)
+	req.Header.Set("Content-Type", "application/json")
+	res, err := ls.HttpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return nil, handler.APIError(res)
+	}
+	var response responseOptions
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		return nil, fmt.Errorf("failed to decode successful response: %v", err)
+	}
+
+	return &response, nil
 }
