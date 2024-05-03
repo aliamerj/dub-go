@@ -85,6 +85,14 @@ func main() {
   		fmt.Printf("Failed to Delete links: %+v\n", err)
 		return // Stop further execution if there's an error
   }
-	fmt.Printf("Links updated successfully: %+v\n", deleteRes)
+	fmt.Printf("Links deleted successfully: %+v\n", deleteRes)
+
+   	listRes, err := client.Links.List(links.GetListOptions{Sort: links.Clicks})
+    	if err != nil {
+	    	fmt.Printf("Failed to fetch links: %+v\n", err)
+	    	return // Stop further execution if there's an error
+    	}
+
+	fmt.Printf("Links: %+v\n", listRes)
 ```
 

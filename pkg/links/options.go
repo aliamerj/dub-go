@@ -77,3 +77,22 @@ type GetOptions struct {
 type deleteResponse struct {
 	Id string `json:"id"`
 }
+type SortBy string
+
+const (
+	CreatedAt   SortBy = "createdAt"
+	Clicks      SortBy = "clicks"
+	LastClicked SortBy = "lastClicked"
+)
+
+type GetListOptions struct {
+	Domain       string   `json:"domain,omitempty"`
+	TagIds       []string `json:"tagIds,omitempty"`
+	TagNames     []string `json:"tagNames,omitempty"`
+	Search       string   `json:"search,omitempty"`
+	UserID       string   `json:"userId,omitempty"`
+	ShowArchived bool     `json:"showArchived,omitempty"`
+	WithTags     bool     `json:"withTags,omitempty"`
+	Sort         SortBy   `json:"sort,omitempty"`
+	Page         int      `json:"page,omitempty"`
+}

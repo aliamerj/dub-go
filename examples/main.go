@@ -9,7 +9,7 @@ import (
 
 // The main function demonstrates how to use the Dub.co Go SDK to create and retrieve links.
 func main() {
-//	Initialize the Dub client configuration with your API token and workspace ID.
+	//	Initialize the Dub client configuration with your API token and workspace ID.
 	client := dub.NewConfig("QKZ2...", "ws_clv...")
 
 	// Create a new link using the Links service.
@@ -39,23 +39,29 @@ func main() {
 		fmt.Printf("Failed to fetch links: %+v\n", errGet)
 		return // Stop further execution if there's an error
 	}
-
+	//
 	// If no error, print the URL fetched by the service.
 	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
-
+	//
 	// Update link's info by link Id
-	res, err := client.Links.Update("linkId", links.RequestOptions{})
+	updateRes, err := client.Links.Update("linkId", links.RequestOptions{})
 	if err != nil {
 		fmt.Printf("Failed to update links: %+v\n", err)
 		return // Stop further execution if there's an error
 	}
-	fmt.Printf("Links updated successfully: %+v\n", res)
+	fmt.Printf("Links updated successfully: %+v\n", updateRes)
 
-  // delete link by id 
-  deleteRes, err := client.Links.Delete("link Id")
-  if err != nil {
-  		fmt.Printf("Failed to Delete links: %+v\n", err)
+	// delete link by id
+	deleteRes, err := client.Links.Delete("link Id")
+	if err != nil {
+		fmt.Printf("Failed to Delete links: %+v\n", err)
 		return // Stop further execution if there's an error
-  }
-	fmt.Printf("Links updated successfully: %+v\n", deleteRes)
+	}
+	fmt.Printf("Links deleted successfully: %+v\n", deleteRes)
+	listRes, err := client.Links.List(links.GetListOptions{Sort: links.Clicks})
+	if err != nil {
+		fmt.Printf("Failed to fetch links: %+v\n", err)
+		return // Stop further execution if there's an error
+	}
+	fmt.Printf("Links: %+v\n", listRes)
 }
