@@ -10,7 +10,7 @@ import (
 // The main function demonstrates how to use the Dub.co Go SDK to create and retrieve links.
 func main() {
 	// Initialize the Dub client configuration with your API token and workspace ID.
-	client := dub.NewConfig("QKZ2CgXKge3bjYf0x1EaL74c", "ws_clvnjwm4p000013yololqhwon")
+	client := dub.NewConfig("QKZ2...", "ws_clv...")
 
 	// Create a new link using the Links service.
 	// Provide the URL to shorten and the domain under which it should be registered.
