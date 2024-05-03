@@ -126,3 +126,30 @@ func (ls *LinksService) Update(linkId string, requsetOptions RequestOptions) (*r
 
 	return &response, nil
 }
+
+func (ls *LinksService) Delete(linkId string) (*deleteResponse, error) {
+	if len(linkId) == 0 {
+		return nil, fmt.Errorf("LinkId should not be  empty")
+	}
+	apiUrl := "https://api.dub.co/links/" + linkId + "?workspaceId=" + ls.WorkspaceId
+
+	req, err := http.NewRequest("DELETE", apiUrl, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+ls.Token)
+	res, err := ls.HttpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return nil, handler.APIError(res)
+	}
+	var response deleteResponse
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		return nil, fmt.Errorf("failed to decode successful response: %v", err)
+	}
+
+	return &response, nil
+}

@@ -9,7 +9,7 @@ import (
 
 // The main function demonstrates how to use the Dub.co Go SDK to create and retrieve links.
 func main() {
-	// Initialize the Dub client configuration with your API token and workspace ID.
+//	Initialize the Dub client configuration with your API token and workspace ID.
 	client := dub.NewConfig("QKZ2...", "ws_clv...")
 
 	// Create a new link using the Links service.
@@ -50,4 +50,12 @@ func main() {
 		return // Stop further execution if there's an error
 	}
 	fmt.Printf("Links updated successfully: %+v\n", res)
+
+  // delete link by id 
+  deleteRes, err := client.Links.Delete("link Id")
+  if err != nil {
+  		fmt.Printf("Failed to Delete links: %+v\n", err)
+		return // Stop further execution if there's an error
+  }
+	fmt.Printf("Links updated successfully: %+v\n", deleteRes)
 }

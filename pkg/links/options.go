@@ -73,3 +73,7 @@ type GetOptions struct {
 	LinkId     string `json:"linkId"`
 	ExternalId string `json:"externalId"`
 }
+
+type deleteResponse struct {
+	Id string `json:"id"`
+}
