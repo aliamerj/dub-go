@@ -70,7 +70,8 @@ func main() {
 
 	// If the link is retrieved successfully, output the URL.
 	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
-}
+	}
+
 	// Update link's info by link Id
 	res, err := client.Links.Update("linkId", links.RequestOptions{})
 	if err != nil {
@@ -79,12 +80,12 @@ func main() {
 	}
 	fmt.Printf("Links updated successfully: %+v\n", res)
 
-  // delete link by id 
-  deleteRes, err := client.Links.Delete("link Id")
-  if err != nil {
+         // delete link by id 
+  	deleteRes, err := client.Links.Delete("link Id")
+	  if err != nil {
   		fmt.Printf("Failed to Delete links: %+v\n", err)
 		return // Stop further execution if there's an error
-  }
+ 	 }
 	fmt.Printf("Links deleted successfully: %+v\n", deleteRes)
 
    	listRes, err := client.Links.List(links.GetListOptions{Sort: links.Clicks})
@@ -92,7 +93,7 @@ func main() {
 	    	fmt.Printf("Failed to fetch links: %+v\n", err)
 	    	return // Stop further execution if there's an error
     	}
-
 	fmt.Printf("Links: %+v\n", listRes)
+}
 ```
 
