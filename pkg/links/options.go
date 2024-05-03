@@ -1,6 +1,6 @@
 package links
 
-type RequestOptions struct {
+type CreateOptions struct {
 	URL         string            `json:"url"`
 	Domain      string            `json:"domain,omitempty"`
 	Key         string            `json:"key,omitempty"`
@@ -65,4 +65,11 @@ type Tag struct {
 	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Color string `json:"color"`
+}
+
+type GetOptions struct {
+	Domain     string `json:"domain"`
+	Key        string `json:"key"`
+	LinkId     string `json:"linkId"`
+	ExternalId string `json:"externalId"`
 }
