@@ -42,7 +42,7 @@ func main() {
 	client := dub.NewConfig("QKZ2...", "ws_clv...")
 
 	// Attempt to create a new link. Specify the URL to be shortened and the domain under which it should be registered.
-	createOpts, errCreated := client.Links.Create(links.CreateOptions{
+	createOpts, errCreated := client.Links.Create(links.Options{
 		URL:    "https://www.worknify.com", // URL to shorten
 		Domain: "dub.sh",                  // Domain under which the link is registered
 	})
@@ -73,7 +73,7 @@ func main() {
 	}
 
 	// Update link's info by link Id
-	res, err := client.Links.Update("linkId", links.RequestOptions{})
+	res, err := client.Links.Update("linkId", links.Options{})
 	if err != nil {
 		fmt.Printf("Failed to update links: %+v\n", err)
 		return // Stop further execution if there's an error
@@ -96,12 +96,26 @@ func main() {
 	fmt.Printf("Links: %+v\n", listRes)
     
 	// Retrieve the number of links
-	count, err := client.Links.Count()
+	// Without options, simply pass nil
+	count, err := client.Links.Count(nil)
 	if err != nil {
 		fmt.Printf("Failed to fetch the number of links: %+v\n", err)
 		return
 	}
 	fmt.Printf("Links: %+v\n", count)
+    
+    // Create Many links
+	newLinks := []links.Options{
+    {URL: "https://github.com/aliamerj/dub-go"}, 
+    {URL: "https://github.com/aliamerj"}
+    }
+	bulk, errCreatedBulk := client.Links.CreateMany(newLinks)
+	if errCreatedBulk != nil {
+		fmt.Printf("Failed to create links: %+v\n", errCreatedBulk)
+		return // Stop further execution if there's an error
+	}
+
+	fmt.Printf("Links: %+v\n", bulk)
 }
 ```
 

@@ -1,6 +1,6 @@
 package links
 
-type RequestOptions struct {
+type Options struct {
 	URL         string            `json:"url,omitempty"`
 	Domain      string            `json:"domain,omitempty"`
 	Key         string            `json:"key,omitempty"`
@@ -77,12 +77,12 @@ type GetOptions struct {
 type deleteResponse struct {
 	Id string `json:"id"`
 }
-type SortBy string
+type sortBy string
 
 const (
-	CreatedAt   SortBy = "createdAt"
-	Clicks      SortBy = "clicks"
-	LastClicked SortBy = "lastClicked"
+	CreatedAt   sortBy = "createdAt"
+	Clicks      sortBy = "clicks"
+	LastClicked sortBy = "lastClicked"
 )
 
 type GetListOptions struct {
@@ -93,15 +93,15 @@ type GetListOptions struct {
 	UserID       string   `json:"userId,omitempty"`
 	ShowArchived bool     `json:"showArchived,omitempty"`
 	WithTags     bool     `json:"withTags,omitempty"`
-	Sort         SortBy   `json:"sort,omitempty"`
+	Sort         sortBy   `json:"sort,omitempty"`
 	Page         int      `json:"page,omitempty"`
 }
 
-type GroupBy string
+type groupBy string
 
 const (
-	Domain GroupBy = "domain"
-	TagId  GroupBy = "tagId"
+	Domain groupBy = "domain"
+	TagId  groupBy = "tagId"
 )
 
 type GetCountOptions struct {
@@ -112,5 +112,5 @@ type GetCountOptions struct {
 	UserID       string   `json:"userId,omitempty"`
 	ShowArchived bool     `json:"showArchived,omitempty"`
 	WithTags     bool     `json:"withTags,omitempty"`
-	GroupBy      GroupBy  `json:"groupBy,omitempty"`
+	GroupBy      groupBy  `json:"groupBy,omitempty"`
 }

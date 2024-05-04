@@ -14,7 +14,7 @@ func main() {
 
 	// Create a new link using the Links service.
 	// Provide the URL to shorten and the domain under which it should be registered.
-	createOpts, errCreated := client.Links.Create(links.RequestOptions{
+	createOpts, errCreated := client.Links.Create(links.Options{
 		URL:    "https://www.google.com",
 		Domain: "dub.sh",
 	})
@@ -44,7 +44,7 @@ func main() {
 	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
 	//
 	// Update link's info by link Id
-	updateRes, err := client.Links.Update("linkId", links.RequestOptions{})
+	updateRes, err := client.Links.Update("linkId", links.Options{Domain: "example.com"})
 	if err != nil {
 		fmt.Printf("Failed to update links: %+v\n", err)
 		return // Stop further execution if there's an error
@@ -58,7 +58,7 @@ func main() {
 		return // Stop further execution if there's an error
 	}
 	fmt.Printf("Links deleted successfully: %+v\n", deleteRes)
-	listRes, err := client.Links.List(links.GetListOptions{Sort: links.Clicks})
+	listRes, err := client.Links.List(&links.GetListOptions{Sort: links.Clicks})
 	if err != nil {
 		fmt.Printf("Failed to fetch links: %+v\n", err)
 		return // Stop further execution if there's an error
@@ -66,10 +66,23 @@ func main() {
 	fmt.Printf("Links: %+v\n", listRes)
 
 	// Retrieve the number of links
-	count, err := client.Links.Count()
+	// Without options, simply pass nil
+	count, err := client.Links.Count(nil)
 	if err != nil {
 		fmt.Printf("Failed to fetch the number of links: %+v\n", err)
-		return
+		return // Stop further execution if there's an error
 	}
 	fmt.Printf("Links: %+v\n", count)
+
+	// Create Many links
+	newLinks := []links.Options{
+		{URL: "https://github.com/aliamerj/dub-go"},
+		{URL: "https://github.com/aliamerj"}}
+	bulk, errCreatedBulk := client.Links.CreateMany(newLinks)
+	if errCreatedBulk != nil {
+		fmt.Printf("Failed to create links: %+v\n", errCreatedBulk)
+		return // Stop further execution if there's an error
+	}
+
+	fmt.Printf("Links: %+v\n", bulk)
 }
