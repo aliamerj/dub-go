@@ -104,11 +104,11 @@ func main() {
 	}
 	fmt.Printf("Links: %+v\n", count)
     
-    // Create Many links
+ 	// Create Many links
 	newLinks := []links.Options{
-    {URL: "https://github.com/aliamerj/dub-go"}, 
-    {URL: "https://github.com/aliamerj"}
-    }
+   	  {URL: "https://github.com/aliamerj/dub-go"}, 
+  	  {URL: "https://github.com/aliamerj"}
+   	 }
 	bulk, errCreatedBulk := client.Links.CreateMany(newLinks)
 	if errCreatedBulk != nil {
 		fmt.Printf("Failed to create links: %+v\n", errCreatedBulk)
