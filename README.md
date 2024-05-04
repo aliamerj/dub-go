@@ -116,6 +116,20 @@ func main() {
 	}
 
 	fmt.Printf("Links: %+v\n", bulk)
+
+	// Read the response body which is expected to be a PNG image Byte
+	qr, qrErr := client.QR.Get(nil)
+	if qrErr != nil {
+		fmt.Println("Error retrieving QR code:", qrErr)
+		return // Stop further execution if there's an error
+	}
+	// Write image data to a file
+	if writeErr := os.WriteFile("qr_code.png", qr, 0644); writeErr != nil {
+		fmt.Println("Error saving QR code image:", writeErr.Error())
+		return  // Stop further execution if there's an error
+	}
+
+	fmt.Println("QR code saved successfully.")
 }
 ```
 
