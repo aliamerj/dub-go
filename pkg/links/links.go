@@ -163,11 +163,10 @@ func (ls *LinksService) List(options ...GetListOptions) ([]responseOptions, erro
 	query.Set("workspaceId", ls.WorkspaceId)
 
 	if len(options) > 0 {
-		buildURL(query, options[0])
+		buildLinksListURL(query, options[0])
 	}
 
 	url.RawQuery = query.Encode()
-	fmt.Println(url.String())
 	req, err := http.NewRequest("GET", url.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %v", err)
@@ -194,17 +193,85 @@ func (ls *LinksService) List(options ...GetListOptions) ([]responseOptions, erro
 	return response, nil
 }
 
-func buildURL(query url.Values, options GetListOptions) {
+func (ls *LinksService) Count(options ...GetCountOptions) (int, error) {
+	baseURL := "https://api.dub.co/links/count"
+	url, err := url.Parse(baseURL)
+	if err != nil {
+		return 0, fmt.Errorf("error parsing base URL: %v", err)
+	}
+	query := url.Query()
+	query.Set("workspaceId", ls.WorkspaceId)
+	if len(options) > 0 {
+		buildLinksCountURL(query, options[0])
+	}
+	url.RawQuery = query.Encode()
+	req, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return 0, fmt.Errorf("error fetch count request: %v", err)
+	}
+	req.Header.Set("Authorization", "Bearer "+ls.Token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := ls.HttpClient.Do(req)
+	if err != nil {
+		return 0, fmt.Errorf("error making HTTP request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return 0, handler.APIError(resp)
+	}
+	var response int
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return 0, fmt.Errorf("failed to decode successful response: %v", err)
+	}
+
+	return response, nil
+}
+
+func buildLinksCountURL(query url.Values, options GetCountOptions) {
 	if options.Domain != "" {
 		query.Add("domain", options.Domain)
 	}
 
-	// For tag IDs, add each ID as a separate parameter
 	for _, tagId := range options.TagIds {
 		query.Add("tagIds", tagId)
 	}
 
-	// For tag names, add each name as a separate parameter
+	for _, tagName := range options.TagNames {
+		query.Add("tagNames", tagName)
+	}
+
+	if options.Search != "" {
+		query.Add("search", options.Search)
+	}
+
+	if options.UserID != "" {
+		query.Add("userId", options.UserID)
+	}
+
+	if options.ShowArchived {
+		query.Add("showArchived", "true")
+	}
+
+	if options.WithTags {
+		query.Add("withTags", "true")
+	}
+
+	if options.GroupBy != "" {
+		query.Add("sort", string(options.GroupBy))
+	}
+}
+
+func buildLinksListURL(query url.Values, options GetListOptions) {
+	if options.Domain != "" {
+		query.Add("domain", options.Domain)
+	}
+
+	for _, tagId := range options.TagIds {
+		query.Add("tagIds", tagId)
+	}
+
 	for _, tagName := range options.TagNames {
 		query.Add("tagNames", tagName)
 	}

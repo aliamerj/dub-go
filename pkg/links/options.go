@@ -96,3 +96,21 @@ type GetListOptions struct {
 	Sort         SortBy   `json:"sort,omitempty"`
 	Page         int      `json:"page,omitempty"`
 }
+
+type GroupBy string
+
+const (
+	Domain GroupBy = "domain"
+	TagId  GroupBy = "tagId"
+)
+
+type GetCountOptions struct {
+	Domain       string   `json:"domain,omitempty"`
+	TagIds       []string `json:"tagIds,omitempty"`
+	TagNames     []string `json:"tagNames,omitempty"`
+	Search       string   `json:"search,omitempty"`
+	UserID       string   `json:"userId,omitempty"`
+	ShowArchived bool     `json:"showArchived,omitempty"`
+	WithTags     bool     `json:"withTags,omitempty"`
+	GroupBy      GroupBy  `json:"groupBy,omitempty"`
+}

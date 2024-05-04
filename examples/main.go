@@ -64,4 +64,12 @@ func main() {
 		return // Stop further execution if there's an error
 	}
 	fmt.Printf("Links: %+v\n", listRes)
+
+	// Retrieve the number of links
+	count, err := client.Links.Count()
+	if err != nil {
+		fmt.Printf("Failed to fetch the number of links: %+v\n", err)
+		return
+	}
+	fmt.Printf("Links: %+v\n", count)
 }
