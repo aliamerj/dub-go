@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/aliamerj/dub-go/internal/handler"
+	"github.com/aliamerj/dub-go/internal/utils"
 )
 
 type LinksService struct {
@@ -163,7 +164,7 @@ func (ls *LinksService) List(options *GetListOptions) ([]responseOptions, error)
 	query.Set("workspaceId", ls.WorkspaceId)
 
 	if options != nil {
-		buildLinksListURL(query, *options)
+		utils.BuildQueryURL(&query, options)
 	}
 
 	url.RawQuery = query.Encode()
@@ -202,7 +203,7 @@ func (ls *LinksService) Count(options *GetCountOptions) (int, error) {
 	query := url.Query()
 	query.Set("workspaceId", ls.WorkspaceId)
 	if options != nil {
-		buildLinksCountURL(query, *options)
+		utils.BuildQueryURL(&query, options)
 	}
 	url.RawQuery = query.Encode()
 	req, err := http.NewRequest("GET", url.String(), nil)
@@ -265,76 +266,4 @@ func (ls *LinksService) CreateMany(options []Options) ([]responseOptions, error)
 	}
 
 	return response, nil
-}
-
-func buildLinksCountURL(query url.Values, options GetCountOptions) {
-	if options.Domain != "" {
-		query.Add("domain", options.Domain)
-	}
-
-	for _, tagId := range options.TagIds {
-		query.Add("tagIds", tagId)
-	}
-
-	for _, tagName := range options.TagNames {
-		query.Add("tagNames", tagName)
-	}
-
-	if options.Search != "" {
-		query.Add("search", options.Search)
-	}
-
-	if options.UserID != "" {
-		query.Add("userId", options.UserID)
-	}
-
-	if options.ShowArchived {
-		query.Add("showArchived", "true")
-	}
-
-	if options.WithTags {
-		query.Add("withTags", "true")
-	}
-
-	if options.GroupBy != "" {
-		query.Add("sort", string(options.GroupBy))
-	}
-}
-
-func buildLinksListURL(query url.Values, options GetListOptions) {
-	if options.Domain != "" {
-		query.Add("domain", options.Domain)
-	}
-
-	for _, tagId := range options.TagIds {
-		query.Add("tagIds", tagId)
-	}
-
-	for _, tagName := range options.TagNames {
-		query.Add("tagNames", tagName)
-	}
-
-	if options.Search != "" {
-		query.Add("search", options.Search)
-	}
-
-	if options.UserID != "" {
-		query.Add("userId", options.UserID)
-	}
-
-	if options.ShowArchived {
-		query.Add("showArchived", "true")
-	}
-
-	if options.WithTags {
-		query.Add("withTags", "true")
-	}
-
-	if options.Sort != "" {
-		query.Add("sort", string(options.Sort))
-	}
-
-	if options.Page > 0 {
-		query.Add("page", fmt.Sprintf("%d", options.Page))
-	}
 }

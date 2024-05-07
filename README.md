@@ -31,105 +31,101 @@ package main
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/aliamerj/dub-go/pkg/analytics"
 	"github.com/aliamerj/dub-go/pkg/dub"
 	"github.com/aliamerj/dub-go/pkg/links"
 )
 
-// The main function demonstrates how to use the Dub.co Go SDK to efficiently create and retrieve shortened links.
 func main() {
-	// Initialize the Dub client with your API token and workspace ID.
-	// Replace "QKZ2..." and "ws_clv..." with your actual API token and workspace ID.
-	client := dub.NewConfig("QKZ2...", "ws_clv...")
+	// Initialize the Dub client configuration with your API token and workspace ID.
+	client := dub.NewConfig("YOUR_API_TOKEN", "YOUR_WORKSPACE_ID")
 
-	// Attempt to create a new link. Specify the URL to be shortened and the domain under which it should be registered.
-	createOpts, errCreated := client.Links.Create(links.Options{
-		URL:    "https://www.worknify.com", // URL to shorten
-		Domain: "dub.sh",                  // Domain under which the link is registered
+	// Create a new link.
+	createOpts, err := client.Links.Create(links.Options{
+		URL:    "https://www.google.com",
+		Domain: "dub.sh",
 	})
-
-	// Handle errors that may occur during the link creation process.
-	if errCreated != nil {
-		fmt.Printf("Failed to create link: %+v\n", errCreated)
-		return // Exit the function if an error occurs to prevent further execution.
-	}
-
-	// If the link is created successfully, output the short link.
-	fmt.Printf("Link created successfully: %s\n", createOpts.ShortLink)
-
-	// Attempt to retrieve a link by specifying its domain and key.
-	getOpts, errGet := client.Links.Get(links.GetOptions{
-		Domain: "dub.sh", // Domain of the link
-		Key:    "RLTVEzV", // Key associated with the link
-	})
-
-	// Handle errors that may occur during the link retrieval process.
-	if errGet != nil {
-		fmt.Printf("Failed to fetch links: %+v\n", errGet)
-		return // Exit the function if an error occurs to prevent further execution.
-	}
-
-	// If the link is retrieved successfully, output the URL.
-	fmt.Printf("Links fetched successfully: %s\n", getOpts.URL)
-	}
-
-	// Update link's info by link Id
-	res, err := client.Links.Update("linkId", links.Options{})
 	if err != nil {
-		fmt.Printf("Failed to update links: %+v\n", err)
-		return // Stop further execution if there's an error
-	}
-	fmt.Printf("Links updated successfully: %+v\n", res)
-
-         // delete link by id 
-  	deleteRes, err := client.Links.Delete("link Id")
-	  if err != nil {
-  		fmt.Printf("Failed to Delete links: %+v\n", err)
-		return // Stop further execution if there's an error
- 	 }
-	fmt.Printf("Links deleted successfully: %+v\n", deleteRes)
-
-   	listRes, err := client.Links.List(links.GetListOptions{Sort: links.Clicks})
-    	if err != nil {
-	    	fmt.Printf("Failed to fetch links: %+v\n", err)
-	    	return // Stop further execution if there's an error
-    	}
-	fmt.Printf("Links: %+v\n", listRes)
-    
-	// Retrieve the number of links
-	// Without options, simply pass nil
-	count, err := client.Links.Count(nil)
-	if err != nil {
-		fmt.Printf("Failed to fetch the number of links: %+v\n", err)
+		fmt.Printf("Failed to create link: %v\n", err)
 		return
 	}
-	fmt.Printf("Links: %+v\n", count)
-    
-    // Create Many links
-	newLinks := []links.Options{
-    {URL: "https://github.com/aliamerj/dub-go"}, 
-    {URL: "https://github.com/aliamerj"}
-    }
-	bulk, errCreatedBulk := client.Links.CreateMany(newLinks)
-	if errCreatedBulk != nil {
-		fmt.Printf("Failed to create links: %+v\n", errCreatedBulk)
-		return // Stop further execution if there's an error
-	}
+	fmt.Printf("Link created successfully: %s\n", createOpts.ShortLink)
 
-	fmt.Printf("Links: %+v\n", bulk)
-
-	// Read the response body which is expected to be a PNG image Byte
-	qr, qrErr := client.QR.Get(nil)
-	if qrErr != nil {
-		fmt.Println("Error retrieving QR code:", qrErr)
-		return // Stop further execution if there's an error
+	// Retrieve a link by domain and key.
+	getOpts, err := client.Links.Get(links.GetOptions{
+		Domain: "dub.sh",
+		Key:    "RLTVEzV",
+	})
+	if err != nil {
+		fmt.Printf("Failed to fetch links: %v\n", err)
+		return
 	}
-	// Write image data to a file
-	if writeErr := os.WriteFile("qr_code.png", qr, 0644); writeErr != nil {
-		fmt.Println("Error saving QR code image:", writeErr.Error())
-		return  // Stop further execution if there's an error
-	}
+	fmt.Printf("Link fetched successfully: %s\n", getOpts.URL)
 
+	// Update a link's information.
+	updateOpts, err := client.Links.Update("linkId", links.Options{Domain: "example.com"})
+	if err != nil {
+		fmt.Printf("Failed to update link: %v\n", err)
+		return
+	}
+	fmt.Printf("Link updated successfully: %v\n", updateOpts)
+
+	// Delete a link by ID.
+	if _, err := client.Links.Delete("linkId"); err != nil {
+		fmt.Printf("Failed to delete link: %v\n", err)
+		return
+	}
+	fmt.Println("Link deleted successfully.")
+
+	// List links with sorting options.
+	listOpts, err := client.Links.List(&links.GetListOptions{Sort: links.Clicks})
+	if err != nil {
+		fmt.Printf("Failed to list links: %v\n", err)
+		return
+	}
+	fmt.Printf("Links listed: %v\n", listOpts)
+
+	// Count the number of links.
+	count, err := client.Links.Count(nil)
+	if err != nil {
+		fmt.Printf("Failed to count links: %v\n", err)
+		return
+	}
+	fmt.Printf("Total links: %d\n", count)
+
+	// Create multiple links in bulk.
+	bulkLinks := []links.Options{
+		{URL: "https://github.com/aliamerj/dub-go"},
+		{URL: "https://github.com/aliamerj"},
+	}
+	bulk, err := client.Links.CreateMany(bulkLinks)
+	if err != nil {
+		fmt.Printf("Failed to create bulk links: %v\n", err)
+		return
+	}
+	fmt.Printf("Bulk links created: %v\n", bulk)
+
+	// Retrieve QR code.
+	qr, err := client.QR.Get(nil)
+	if err != nil {
+		fmt.Printf("Error retrieving QR code: %v\n", err)
+		return
+	}
+	if err := os.WriteFile("qr_code.png", qr, 0644); err != nil {
+		fmt.Printf("Error saving QR code image: %v\n", err)
+		return
+	}
 	fmt.Println("QR code saved successfully.")
+
+	// Retrieve link click analytics.
+	clicks, err := client.Analytics.Clicks(&analytics.Options{LinkId: "linkId"})
+	if err != nil {
+		fmt.Printf("Error retrieving link clicks: %v\n", err)
+		return
+	}
+	fmt.Printf("Total clicks: %d\n", clicks)
 }
 ```
 

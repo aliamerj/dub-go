@@ -19,5 +19,5 @@ func APIError(resp *http.Response) error {
 	if err := json.NewDecoder(resp.Body).Decode(&apiError); err != nil {
 		return fmt.Errorf("failed to parse API error response: %v", err)
 	}
-	return fmt.Errorf("%s - see documentation at %s", apiError.Error.Message, apiError.Error.DocURL)
+	return fmt.Errorf("Error: %s", apiError.Error.Message)
 }
