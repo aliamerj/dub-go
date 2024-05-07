@@ -23,7 +23,7 @@ type TestOptions struct {
 	Status   Status
 	Priority Priority
 	Tags     []string
-	page     int
+	Page     int
 }
 
 // TestBuildQueryURL provides comprehensive testing of various struct inputs
@@ -40,9 +40,9 @@ func TestBuildQueryURL(t *testing.T) {
 				Status:   StatusActive,
 				Priority: PriorityHigh,
 				Tags:     []string{"tag1", "tag2"},
-				page:     5,
+			 Page:     5,
 			},
-			expected: "name=Test&priority=1&status=active&tags=tag1&tags=tag2",
+			expected: "name=Test&page=5&priority=1&status=active&tags=tag1&tags=tag2",
 		},
 		{
 			name: "Edge cases with enums",
@@ -50,9 +50,9 @@ func TestBuildQueryURL(t *testing.T) {
 				Name:     "EdgeCase",
 				Status:   StatusInactive,
 				Priority: PriorityLow,
-				page:     -1,
+				Page:     -1,
 			},
-			expected: "name=EdgeCase&priority=3&status=inactive",
+			expected: "name=EdgeCase&page=-1&priority=3&status=inactive",
 		},
 		{
 			name: "Empty strings and zero values",
@@ -60,7 +60,7 @@ func TestBuildQueryURL(t *testing.T) {
 				Name:     "",
 				Status:   "", // Test for empty string as enum
 				Priority: 0,  // Test for zero value which might not be a valid enum
-				page:     0,
+				Page:     0,
 			},
 			expected: "",
 		},
