@@ -28,3 +28,49 @@ type Options struct {
 	Qr         bool     `json:"qr,omitempty"`
 	Root       bool     `json:"root,omitempty"`
 }
+
+type timeseriesResponse struct {
+	Start  string `json:"start"`
+	Clicks int    `json:"clicks"`
+}
+
+type countriesResponse struct {
+	Country string `json:"country"`
+	Clicks  int    `json:"clicks"`
+}
+
+type citiesResponse struct {
+	City    string `json:"city"`
+	Country string `json:"country"`
+	Clicks  int    `json:"clicks"`
+}
+
+type devicesResponse struct {
+	Device string `json:"device"`
+	Clicks int    `json:"clicks"`
+}
+
+type browsersResponse struct {
+	Browser string `json:"browser"`
+	Clicks  int    `json:"clicks"`
+}
+
+type osResponse struct {
+	OS     string `json:"os"`
+	Clicks int    `json:"clicks"`
+}
+
+type refererResponse struct {
+	Referer string `json:"referer"`
+	Clicks  int    `json:"clicks"`
+}
+
+type topLinkResponse struct {
+	Link   string `json:"link"`
+	Clicks int    `json:"clicks"`
+}
+
+type topUrlsResponse struct {
+	Url    string `json:"url"`
+	Clicks int    `json:"clicks"`
+}
