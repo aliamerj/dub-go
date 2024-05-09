@@ -277,6 +277,32 @@ func main() {
 	}
 	fmt.Println("Domain Transfer successfully: " + transferDomain.Slug)
 
+    //Create a new tag for the authenticated workspace.
+	newTage, err := client.Tags.Create(tags.Options{Tag: "news", Color: tags.Blue})
+	if err != nil {
+		fmt.Println("Failed to Create tag", err)
+		return
+	}
+	fmt.Println("Tag created successfully", newTage.Name)
+
+	// Retrieve a list of tags for the authenticated workspace.
+	tags, err := client.Tags.List()
+	if err != nil {
+		fmt.Println("Failed to Retrieve all tags", err)
+		return
+	}
+	for _, tag := range tags {
+		fmt.Println("tag :" + tag.Name)
+	}
+
+	// Retrieve the metatags for a URL.
+	metaTag, err := client.Metatags.Get("https://dub.co")
+	if err != nil {
+		fmt.Println("Failed to Retrieve metatags", err)
+		return
+	}
+	fmt.Println(metaTag)
+
 }
 ```
 
