@@ -1,6 +1,8 @@
 package workspace
 
 type Options struct {
+	Name   string `json:"name"`
+	Slug   string `json:"slug"`
 	Domain string `json:"domain,omitempty"`
 }
 

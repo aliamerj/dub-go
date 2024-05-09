@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/aliamerj/dub-go/pkg/analytics"
+	"github.com/aliamerj/dub-go/pkg/domains"
 	"github.com/aliamerj/dub-go/pkg/links"
 	"github.com/aliamerj/dub-go/pkg/qr"
 	"github.com/aliamerj/dub-go/pkg/workspace"
@@ -15,6 +16,7 @@ type Dub struct {
 	QR        *qr.QrService
 	Analytics *analytics.AnalyticsService
 	Workspace *workspace.WorkspaceServices
+	Domains   *domains.DomainService
 }
 
 func NewConfig(token string, workspaceId string) *Dub {
@@ -40,6 +42,13 @@ func NewConfig(token string, workspaceId string) *Dub {
 		},
 		Workspace: &workspace.WorkspaceServices{
 			Token: token,
+			HttpClient: &http.Client{
+				Timeout: time.Second * 30,
+			},
+		},
+		Domains: &domains.DomainService{
+			Token:       token,
+			WorkspaceId: workspaceId,
 			HttpClient: &http.Client{
 				Timeout: time.Second * 30,
 			},

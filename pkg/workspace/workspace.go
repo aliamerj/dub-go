@@ -14,39 +14,16 @@ type WorkspaceServices struct {
 	HttpClient *http.Client
 }
 
-func (ws *WorkspaceServices) Create(name string, slug string, options *Options) (*responseWorkspace, error) {
+func (ws *WorkspaceServices) Create(options Options) (*responseWorkspace, error) {
 	url := "https://api.dub.co/workspaces"
-	if len(name) == 0 {
+	if len(options.Name) == 0 {
 		return nil, fmt.Errorf("Name is required")
 	}
-	if len(slug) == 0 {
+	if len(options.Slug) == 0 {
 		return nil, fmt.Errorf("Slug is required")
 	}
 
-	var body interface{}
-
-	if options != nil {
-		body = struct {
-			Name   string `json:"name"`
-			Slug   string `json:"slug"`
-			Domain string `json:"domain,omitempty"`
-		}{
-			Name:   name,
-			Slug:   slug,
-			Domain: options.Domain,
-		}
-	} else {
-		body = struct {
-			Name string `json:"name"`
-			Slug string `json:"slug"`
-		}{
-			Name: name,
-			Slug: slug,
-		}
-
-	}
-
-	jsonData, err := json.Marshal(body)
+	jsonData, err := json.Marshal(options)
 	if err != nil {
 		return nil, err
 	}

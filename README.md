@@ -203,7 +203,7 @@ func main() {
 	}
 
     // Example of creating new workspace
-	workspace, err := client.Workspace.Create("work", "work-dub", nil)
+	workspace, err := client.Workspace.Create(workspace.Options{Name: "work", Slug: "dub-slug"})
 	if err != nil {
 		fmt.Printf("Failed to Create new workspace: %v\n", err)
 	}
@@ -226,6 +226,56 @@ func main() {
 	for _, workspace := range workspaces {
 		fmt.Println("workspace :" + workspace.Name)
 	}
+
+    //Add a domain to the authenticated workspace.
+	domain, err := client.Domains.Add(domains.Options{Slug: "acme.com"})
+	if err != nil {
+		fmt.Printf("Failed to Add domain: %v\n", err)
+	}
+	fmt.Println("New domain added : " + domain.ID)
+
+	// Edit a domain for the authenticated workspace.
+	updatedDomain, err := client.Domains.Update("test", domains.Options{Slug: "Xacme.com"})
+	if err != nil {
+		fmt.Printf("Failed to upadate domain: %v\n", err)
+		return
+	}
+	fmt.Println("new Domain: " + updatedDomain.Slug)
+
+	// Delete a domain from a workspace
+	deletedDomain, err := client.Domains.Delete("Xacme.com")
+	if err != nil {
+		fmt.Printf("Failed to delete domain: %v\n", err)
+		return
+	}
+	fmt.Println("Domain deleted successfully: " + deletedDomain.Slug)
+
+	// Retrieve a list of domains associated with the authenticated workspace.
+	domains, err := client.Domains.List()
+	if err != nil {
+		fmt.Printf("Failed to delete domain: %v\n", err)
+		return
+	}
+
+	for _, domain := range domains {
+		fmt.Println("domain :" + domain.Slug)
+	}
+
+	// Set a domain as primary for the authenticated workspace.
+	primaryDomain, err := client.Domains.SetPrimary("acme.com")
+	if err != nil {
+		fmt.Printf("Failed to set domain to be primary: %v\n", err)
+		return
+	}
+	fmt.Println("Domain set to be primary successfully: " + primaryDomain.Slug)
+
+	// Transfer a domain to another workspace
+	transferDomain, err := client.Domains.Transfer("acme.com", "New_workspace_ID")
+	if err != nil {
+		fmt.Printf("Failed to Transfer domain : %v\n", err)
+		return
+	}
+	fmt.Println("Domain Transfer successfully: " + transferDomain.Slug)
 
 }
 ```
