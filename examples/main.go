@@ -173,4 +173,29 @@ func main() {
 		fmt.Println("Top URLs retrieved successfully:", topUrlsData)
 	}
 
+	// Example of creating new workspace
+	workspace, err := client.Workspace.Create("work", "work-dub", nil)
+	if err != nil {
+		fmt.Printf("Failed to Create new workspace: %v\n", err)
+	}
+	fmt.Println("New workspace created : " + workspace.Name)
+
+	// Example of retrieving workspace by ID
+	myWorkSpace, err := client.Workspace.Get("Workspace ID")
+	if err != nil {
+		fmt.Printf("Failed to retrieve workspace: %v\n", err)
+		return
+	}
+	fmt.Println("workspace retrieved successfully : " + myWorkSpace.Name)
+
+	// Example of retrieving all workspaces
+	workspaces, err := client.Workspace.List()
+	if err != nil {
+		fmt.Printf("Failed to retrieve workspaces: %v\n", err)
+		return
+	}
+	for _, workspace := range workspaces {
+		fmt.Println("workspace :" + workspace.Name)
+	}
+
 }
