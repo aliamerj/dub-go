@@ -1,4 +1,11 @@
-# Dub.co Go SDK
+
+<div align="center">
+  <img src="https://github.com/dubinc/dub/assets/28986134/3815d859-afaa-48f9-a9b3-c09964e4d404" alt="Dub.co TypeScript SDK to interact with APIs.">
+  <h3>Dub.co Golang SDK</h3>
+</div>
+
+<br/>
+
 
 Welcome to the Dub.co Go SDK! This toolkit is designed to make your life easier when integrating Go applications with Dub.co's APIs. Whether you're building a new project or adding to an existing one, this SDK aims to streamline your workflow with easy setup and comprehensive features.
 
